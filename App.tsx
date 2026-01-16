@@ -38,54 +38,67 @@ const App: React.FC = () => {
     }
   };
 
-  // Direct reference to the uploaded logo asset
+  // CORRECTED LOGO PATH: Using relative path to the root file
   const logoUrl = "logo.png";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 md:px-8 bg-[#0a0e17] selection:bg-[#D73A27] selection:text-white">
+      {/* Background Decorative Elements */}
       <div className="fixed inset-0 overflow-hidden -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#2D4A8D]/20 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#D73A27]/20 blur-[120px] rounded-full"></div>
+        <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] bg-[#2D4A8D]/15 blur-[140px] rounded-full"></div>
+        <div className="absolute bottom-[-15%] right-[-10%] w-[60%] h-[60%] bg-[#D73A27]/15 blur-[140px] rounded-full"></div>
       </div>
 
-      <header className="mb-6 text-center flex flex-col items-center">
-        <div className="bg-white p-4 rounded-2xl shadow-2xl mb-4 border border-white/20 max-w-[280px] transition-transform hover:scale-105">
+      {/* HEADER LOGO */}
+      <header className="mb-10 text-center flex flex-col items-center w-full max-w-4xl">
+        <div className="bg-white p-4 md:p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] mb-6 border-b-4 border-[#2D4A8D] transition-transform hover:scale-105 inline-block">
             <img 
               src={logoUrl} 
               alt="Lab of Future Logo" 
-              className="w-full h-auto block"
-              loading="eager"
+              className="w-48 md:w-64 h-auto block object-contain"
+              onError={(e) => {
+                // Fallback if logo.png is missing from the directory
+                (e.target as HTMLImageElement).src = "https://api.a0.dev/assets/image?text=Lab%20of%20Future%20Logo&aspect=2:1";
+              }}
             />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tighter">
-          TRUST <span className="text-[#D73A27]">GUARDIAN</span>
-        </h1>
-        <div className="h-1 w-24 bg-gradient-to-r from-[#2D4A8D] to-[#D73A27] rounded-full mb-2"></div>
-        <p className="text-slate-400 font-black tracking-[0.2em] uppercase text-[10px]">A Lab of Future Initiative</p>
+        
+        <div className="space-y-1">
+          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase">
+            TRUST <span className="text-[#D73A27]">GUARDIAN</span>
+          </h1>
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-[2px] w-12 bg-[#D73A27]/40"></div>
+            <p className="text-slate-500 font-bold tracking-[0.4em] uppercase text-[10px]">A Lab of Future Initiative</p>
+            <div className="h-[2px] w-12 bg-[#2D4A8D]/40"></div>
+          </div>
+        </div>
       </header>
 
-      <main className="w-full max-w-4xl glass-panel rounded-3xl overflow-hidden shadow-2xl border-t border-white/10 relative">
+      <main className="w-full max-w-4xl glass-panel rounded-[2.5rem] overflow-hidden shadow-2xl border-t border-white/10 relative">
         {view === 'landing' && <Landing onStart={startQuiz} />}
         
         {view === 'quiz' && (
-          <div className="p-6 md:p-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-              <div className="md:col-span-1 flex flex-col items-center justify-center space-y-4 md:sticky md:top-0">
+          <div className="p-6 md:p-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+              <div className="md:col-span-1 flex flex-col items-center justify-center space-y-6 md:sticky md:top-4">
                 <Gauge value={score} />
-                <div className="text-center">
-                  <span className="text-xs uppercase tracking-[0.2em] text-slate-500 font-bold">Trust Index</span>
-                  <div className="text-4xl font-black text-white transition-all tabular-nums">{score}%</div>
+                <div className="text-center bg-white/5 p-4 rounded-2xl border border-white/5 w-full">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-black">Digital Standing</span>
+                  <div className="text-4xl font-black text-white tabular-nums drop-shadow-md">{score}%</div>
                 </div>
               </div>
               
               <div className="md:col-span-2">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="px-4 py-1.5 rounded-lg bg-[#2D4A8D]/20 text-[#2D4A8D] text-xs font-bold uppercase tracking-wider border border-[#2D4A8D]/30">
+                <div className="flex justify-between items-center mb-8">
+                  <span className="px-5 py-2 rounded-xl bg-[#2D4A8D]/10 text-[#2D4A8D] text-xs font-black uppercase tracking-[0.15em] border border-[#2D4A8D]/30">
                     {SCENARIOS[currentIndex].category}
                   </span>
-                  <span className="text-slate-400 font-bold bg-white/5 px-3 py-1 rounded-lg text-sm border border-white/5">
-                    {currentIndex + 1} <span className="text-slate-600 mx-1">/</span> {SCENARIOS.length}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-400 font-bold text-sm bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
+                      {currentIndex + 1}<span className="text-slate-600 px-1 font-normal">/</span>{SCENARIOS.length}
+                    </span>
+                  </div>
                 </div>
                 <ScenarioCard 
                   scenario={SCENARIOS[currentIndex]} 
@@ -106,8 +119,8 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="mt-8 text-slate-500 text-sm text-center font-medium opacity-60">
-        <p>© Lab of Future • Digital Citizenship Simulator</p>
+      <footer className="mt-12 text-slate-600 text-[10px] text-center font-black tracking-[0.5em] uppercase opacity-50 pb-8">
+        <p>© Lab of Future • Digital Citizenship Protocol</p>
       </footer>
     </div>
   );
