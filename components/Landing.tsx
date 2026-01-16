@@ -6,7 +6,7 @@ interface LandingProps {
 }
 
 export const Landing: React.FC<LandingProps> = ({ onStart }) => {
-  const logoUrl = "https://api.a0.dev/assets/image?text=Lab%20of%20Future%20Logo%20red%20head%20silhouette%20rocket%20launching%20space%20blue%20text&aspect=2:1";
+  const logoUrl = "logo.png";
 
   return (
     <div className="p-8 md:p-12 text-center flex flex-col items-center">

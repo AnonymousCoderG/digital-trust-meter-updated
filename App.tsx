@@ -39,7 +39,7 @@ const App: React.FC = () => {
   };
 
   // Direct reference to the uploaded logo asset
-  const logoUrl = "https://api.a0.dev/assets/image?text=Lab%20of%20Future%20Logo%20red%20head%20silhouette%20rocket%20launching%20space%20blue%20text&aspect=2:1";
+  const logoUrl = "logo.png";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
