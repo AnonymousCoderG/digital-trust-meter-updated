@@ -38,27 +38,28 @@ const App: React.FC = () => {
     }
   };
 
-  // CORRECTED LOGO PATH: Using relative path to the root file
-  const logoUrl = "logo.png";
+  // Ensure this file exists in your 'public' or root folder on Vercel
+  const logoUrl = "./logo.png";
+  const fallbackUrl = "https://placehold.co/400x200/FFFFFF/2D4A8D?text=LAB+OF+FUTURE";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 md:px-8 bg-[#0a0e17] selection:bg-[#D73A27] selection:text-white">
-      {/* Background Decorative Elements */}
       <div className="fixed inset-0 overflow-hidden -z-10">
         <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] bg-[#2D4A8D]/15 blur-[140px] rounded-full"></div>
         <div className="absolute bottom-[-15%] right-[-10%] w-[60%] h-[60%] bg-[#D73A27]/15 blur-[140px] rounded-full"></div>
       </div>
 
-      {/* HEADER LOGO */}
       <header className="mb-10 text-center flex flex-col items-center w-full max-w-4xl">
-        <div className="bg-white p-4 md:p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] mb-6 border-b-4 border-[#2D4A8D] transition-transform hover:scale-105 inline-block">
+        <div className="bg-white p-4 md:p-5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] mb-6 border-b-4 border-[#2D4A8D] transition-transform hover:scale-105 inline-block overflow-hidden">
             <img 
               src={logoUrl} 
               alt="Lab of Future Logo" 
-              className="w-48 md:w-64 h-auto block object-contain"
+              className="w-48 md:w-64 h-auto block object-contain max-h-32"
               onError={(e) => {
-                // Fallback if logo.png is missing from the directory
-                (e.target as HTMLImageElement).src = "https://api.a0.dev/assets/image?text=Lab%20of%20Future%20Logo&aspect=2:1";
+                const target = e.target as HTMLImageElement;
+                if (target.src !== fallbackUrl) {
+                  target.src = fallbackUrl;
+                }
               }}
             />
         </div>

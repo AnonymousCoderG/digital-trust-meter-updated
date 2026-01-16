@@ -6,20 +6,23 @@ interface LandingProps {
 }
 
 export const Landing: React.FC<LandingProps> = ({ onStart }) => {
-  // CORRECTED LOGO PATH: Matches the local logo.png file
-  const logoUrl = "logo.png";
+  const logoUrl = "./logo.png";
+  const fallbackUrl = "https://placehold.co/600x300/FFFFFF/2D4A8D?text=LAB+OF+FUTURE";
 
   return (
     <div className="p-8 md:p-16 text-center flex flex-col items-center">
       <div className="relative mb-14 float-animation">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#D73A27] to-[#2D4A8D] blur-[60px] opacity-20 rounded-full scale-150"></div>
-        <div className="relative w-80 md:w-96 bg-white rounded-[2.5rem] border-b-8 border-[#2D4A8D] flex items-center justify-center shadow-[0_30px_70px_rgba(0,0,0,0.6)] p-10">
+        <div className="relative w-80 md:w-96 bg-white rounded-[2.5rem] border-b-8 border-[#2D4A8D] flex items-center justify-center shadow-[0_30px_70px_rgba(0,0,0,0.6)] p-10 overflow-hidden">
           <img 
             src={logoUrl} 
             alt="Lab of Future" 
-            className="w-full h-auto object-contain block"
+            className="w-full h-auto object-contain block max-h-48"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://api.a0.dev/assets/image?text=Lab%20of%20Future%20Logo&aspect=2:1";
+              const target = e.target as HTMLImageElement;
+              if (target.src !== fallbackUrl) {
+                target.src = fallbackUrl;
+              }
             }}
           />
         </div>
