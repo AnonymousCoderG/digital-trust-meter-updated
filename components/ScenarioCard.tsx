@@ -11,7 +11,6 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [isLocked, setIsLocked] = useState(false);
 
-  // Reset local state when scenario changes
   useEffect(() => {
     setSelectedIdx(null);
     setIsLocked(false);
@@ -22,7 +21,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
     setSelectedIdx(idx);
     setIsLocked(true);
 
-    // Show feedback for 10 seconds to allow for clear understanding before moving on
+    // Short delay for the "locking" animation before triggering feedback
     setTimeout(() => {
       onSelect(option.impact, option.feedback);
     }, 10000);
@@ -30,13 +29,12 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <h2 className="text-xl md:text-2xl font-bold mb-8 text-white leading-tight">
+      <h2 className="text-lg md:text-2xl font-bold mb-6 text-white leading-tight min-h-[4rem]">
         {scenario.question}
       </h2>
-      <div className="space-y-4">
+      <div className="grid gap-3 md:gap-4">
         {scenario.options.map((option, idx) => {
           const isSelected = selectedIdx === idx;
-          // Find the best option in the array (highest impact)
           const bestImpact = Math.max(...scenario.options.map(o => o.impact));
           const isBestAction = option.impact === bestImpact;
           
@@ -45,7 +43,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
           
           let bgColor = "bg-white/[0.03]";
           let borderColor = "border-white/5";
-          let iconColor = "bg-slate-800 text-slate-500";
+          let iconColor = "bg-slate-800 text-slate-400";
 
           if (showAsCorrect) {
             bgColor = "bg-[#2D4A8D]/20";
@@ -59,21 +57,30 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
 
           return (
             <button
-              key={idx}
+              key={`${scenario.id}-${idx}`}
               disabled={isLocked}
               onClick={() => handleChoice(idx, option)}
-              className={`w-full text-left p-5 rounded-2xl border ${borderColor} ${bgColor} transition-all group flex items-start space-x-4 ${!isLocked ? 'hover:bg-white/[0.08] hover:border-[#2D4A8D]/40' : 'cursor-default'}`}
+              className={`
+                w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-200
+                flex items-start space-x-4 outline-none focus:outline-none
+                ${borderColor} ${bgColor}
+                ${!isLocked ? 'active:scale-[0.98] active:bg-white/[0.08] lg:hover:bg-white/[0.08] lg:hover:border-[#2D4A8D]/40' : 'cursor-default'}
+                ${isSelected && !isLocked ? 'ring-2 ring-[#2D4A8D]' : ''}
+              `}
             >
-              <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm font-black shrink-0 transition-colors ${iconColor}`}>
+              <span className={`
+                w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-sm md:text-base font-black shrink-0 transition-colors
+                ${iconColor}
+              `}>
                 {isLocked ? (isBestAction ? '✓' : (isSelected ? '✕' : String.fromCharCode(65 + idx))) : String.fromCharCode(65 + idx)}
               </span>
-              <div className="flex-1">
-                <span className={`font-medium text-base leading-snug ${isSelected || showAsCorrect ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>
+              <div className="flex-1 pt-1 md:pt-2">
+                <span className={`font-semibold text-sm md:text-base leading-snug transition-colors ${isSelected || showAsCorrect ? 'text-white' : 'text-slate-300'}`}>
                   {option.text}
                 </span>
                 {isLocked && (isSelected || isBestAction) && (
-                  <div className={`mt-2 text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-1 ${isBestAction ? 'text-[#2D4A8D]' : 'text-[#D73A27]'}`}>
-                    {isBestAction ? '★ BEST ACTION' : '✖ INCORRECT CHOICE'}
+                  <div className={`mt-2 text-[10px] font-black uppercase tracking-[0.2em] animate-in fade-in slide-in-from-top-1 ${isBestAction ? 'text-[#2D4A8D]' : 'text-[#D73A27]'}`}>
+                    {isBestAction ? '★ OPTIMAL CHOICE' : '✖ REPUTATION HIT'}
                   </div>
                 )}
               </div>
@@ -81,10 +88,10 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
           );
         })}
       </div>
+      
       {isLocked && (
-        <div className="mt-6 p-5 rounded-2xl bg-[#0a0e17]/80 border border-white/10 animate-in fade-in zoom-in-95 duration-500 shadow-2xl relative overflow-hidden">
-           {/* Animated progress bar to show the 10s wait */}
-           <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[#2D4A8D] to-[#D73A27] animate-[width_10s_linear_forwards]" style={{ width: '0%' }}>
+        <div className="mt-8 p-6 rounded-3xl bg-[#0a0e17]/80 border border-white/10 animate-in fade-in zoom-in-95 duration-500 shadow-2xl relative overflow-hidden">
+           <div className="absolute bottom-0 left-0 h-1.5 bg-gradient-to-r from-[#2D4A8D] to-[#D73A27] animate-[width_10s_linear_forwards]" style={{ width: '0%' }}>
              <style>{`
                @keyframes width {
                  from { width: 0%; }
@@ -92,11 +99,13 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect }
                }
              `}</style>
            </div>
-           <div className="flex items-center gap-2 mb-2">
-             <div className={`w-2 h-2 rounded-full ${scenario.options[selectedIdx!].impact > 0 ? 'bg-[#2D4A8D]' : 'bg-[#D73A27]'}`}></div>
-             <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Digital Feedback (Moving on in 10s...)</p>
+           <div className="flex items-center gap-3 mb-3">
+             <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${scenario.options[selectedIdx!].impact > 0 ? 'bg-[#2D4A8D]' : 'bg-[#D73A27]'}`}></div>
+             <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Intelligence Report</p>
            </div>
-           <p className="text-white text-base font-medium">"{scenario.options[selectedIdx!].feedback}"</p>
+           <p className="text-white text-base md:text-lg font-medium italic leading-relaxed">
+             "{scenario.options[selectedIdx!].feedback}"
+           </p>
         </div>
       )}
     </div>
