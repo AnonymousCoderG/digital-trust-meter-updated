@@ -33,7 +33,7 @@ export const Landing: React.FC<LandingProps> = ({ onStart }) => {
           DIGITAL <span className="text-[#D73A27]">REPUTATION</span> LAB
         </h2>
         <p className="text-slate-400 max-w-lg mx-auto text-lg leading-relaxed font-medium">
-          Welcome to the professional trust simulator. Navigate 10 high-stakes digital scenarios to determine your reputation index.
+          Welcome! Face 10 real-life digital challenges to see if you can keep your reputation safe online.
         </p>
       </div>
       
